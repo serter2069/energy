@@ -1,0 +1,162 @@
+List of Tables in Database:
+Table: energy_reports
+  Column: id - int(11)
+  Column: user_id - int(11)
+  Column: report_date - date
+  Column: physical_energy - int(11)
+  Column: physical_comment - text
+  Column: mental_energy - int(11)
+  Column: mental_comment - text
+  Column: emotional_energy - int(11)
+  Column: emotional_comment - text
+  Column: why_not_energy - int(11)
+  Column: why_not_comment - text
+  Column: created_at - timestamp
+  Column: updated_at - timestamp
+  Column: focus_of_day - text
+  Column: thought_of_day - text
+  Column: what_im_afraid_of - text
+  Column: what_to_take_from_surroundings - text
+  Column: world_picture - text
+  Column: happiness - text
+
+Table: users
+  Column: id - int(11)
+  Column: email - varchar(255)
+  Column: password - varchar(255)
+  Column: token - varchar(255)
+  Column: registration_date - datetime
+  Column: email_activation_status - enum('activated','not_activated')
+  Column: timezone - varchar(255)
+  Column: pro_mode - tinyint(1)
+  Column: pro_focus_of_day - tinyint(1)
+  Column: pro_thought_of_day - tinyint(1)
+  Column: pro_what_im_afraid_of - tinyint(1)
+  Column: pro_what_to_take_from_surroundings - tinyint(1)
+  Column: pro_world_picture - tinyint(1)
+  Column: pro_happiness - tinyint(1)
+
+
+Table Relationships (Foreign Keys):
+Table: energy_reports
+  Column: user_id -> users(id)
+
+Table: users
+
+
+Sample Data from Tables:
+Table: energy_reports (Example Records)
+{
+    "id": "19",
+    "user_id": "6",
+    "report_date": "2024-08-13",
+    "physical_energy": "40",
+    "physical_comment": "Sore from rock climbing",
+    "mental_energy": "100",
+    "mental_comment": "",
+    "emotional_energy": "100",
+    "emotional_comment": "",
+    "why_not_energy": "60",
+    "why_not_comment": "Long day at work",
+    "created_at": "2024-08-13 04:32:08",
+    "updated_at": "2024-08-13 04:34:47",
+    "focus_of_day": null,
+    "thought_of_day": null,
+    "what_im_afraid_of": null,
+    "what_to_take_from_surroundings": null,
+    "world_picture": null,
+    "happiness": null
+}
+{
+    "id": "20",
+    "user_id": "6",
+    "report_date": "2024-08-12",
+    "physical_energy": "100",
+    "physical_comment": null,
+    "mental_energy": "100",
+    "mental_comment": null,
+    "emotional_energy": "100",
+    "emotional_comment": null,
+    "why_not_energy": "100",
+    "why_not_comment": null,
+    "created_at": "2024-08-13 04:32:08",
+    "updated_at": "2024-08-13 04:32:08",
+    "focus_of_day": null,
+    "thought_of_day": null,
+    "what_im_afraid_of": null,
+    "what_to_take_from_surroundings": null,
+    "world_picture": null,
+    "happiness": null
+}
+{
+    "id": "21",
+    "user_id": "7",
+    "report_date": "2024-08-13",
+    "physical_energy": "100",
+    "physical_comment": null,
+    "mental_energy": "100",
+    "mental_comment": null,
+    "emotional_energy": "100",
+    "emotional_comment": null,
+    "why_not_energy": "100",
+    "why_not_comment": null,
+    "created_at": "2024-08-13 04:43:20",
+    "updated_at": "2024-08-13 04:43:20",
+    "focus_of_day": null,
+    "thought_of_day": null,
+    "what_im_afraid_of": null,
+    "what_to_take_from_surroundings": null,
+    "world_picture": null,
+    "happiness": null
+}
+
+Table: users (Example Records)
+{
+    "id": "1",
+    "email": "serter2069@gmail.com",
+    "password": "$2y$10$mvghb41fO\/Rt8sZvmNU5PefvGDIziD0KWKZcgfaWt1ONvrHgPm.RC",
+    "token": null,
+    "registration_date": "2024-08-11 21:15:28",
+    "email_activation_status": "activated",
+    "timezone": "UTC-08:00",
+    "pro_mode": "1",
+    "pro_focus_of_day": "1",
+    "pro_thought_of_day": "1",
+    "pro_what_im_afraid_of": "1",
+    "pro_what_to_take_from_surroundings": "1",
+    "pro_world_picture": "1",
+    "pro_happiness": "1"
+}
+{
+    "id": "2",
+    "email": "geyagag283@biscoine.com",
+    "password": "$2y$10$EZtWfZ.GuEw0js8m7.P2m.bdFsjyxbcAIqS5jgpmC7iYbCCesYgxO",
+    "token": null,
+    "registration_date": "2024-08-11 21:34:04",
+    "email_activation_status": "activated",
+    "timezone": "UTC",
+    "pro_mode": "0",
+    "pro_focus_of_day": "1",
+    "pro_thought_of_day": "1",
+    "pro_what_im_afraid_of": "1",
+    "pro_what_to_take_from_surroundings": "1",
+    "pro_world_picture": "1",
+    "pro_happiness": "1"
+}
+{
+    "id": "3",
+    "email": "dontsurrender@ya.ru",
+    "password": "",
+    "token": "49b6c113716e5efc34c01e3ebab5c3ab",
+    "registration_date": "2024-08-11 21:36:14",
+    "email_activation_status": "not_activated",
+    "timezone": "UTC",
+    "pro_mode": "0",
+    "pro_focus_of_day": "1",
+    "pro_thought_of_day": "1",
+    "pro_what_im_afraid_of": "1",
+    "pro_what_to_take_from_surroundings": "1",
+    "pro_world_picture": "1",
+    "pro_happiness": "1"
+}
+
