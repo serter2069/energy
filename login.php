@@ -1,6 +1,13 @@
 <?php
 session_start();
+require_once 'check_auth.php';
 include 'db_connection.php';
+
+// Проверка авторизации
+if (is_logged_in()) {
+    header("Location: dashboard.php");
+    exit();
+}
 
 $error = '';
 
@@ -18,10 +25,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $user = $result->fetch_assoc();
         if (password_verify($password, $user['password'])) {
             if ($user['email_activation_status'] == 'activated') {
-                $_SESSION['user_id'] = $user['id'];
-                
-                // Установка куки для сохранения авторизации на 30 дней
-                setcookie('user_id', $user['id'], time() + (30 * 24 * 60 * 60), "/", "", true, true);
+
+                // После успешной аутентификации
+            $_SESSION['user_id'] = $user['id'];
+            setcookie('user_id', $user['id'], time() + (30 * 24 * 60 * 60), "/", "", true, true);
                 
                 // Вызов скрипта create_missing_reports.php
                 $create_reports_url = "http://" . $_SERVER['HTTP_HOST'] . "/create_missing_reports.php?user_id=" . $user['id'];

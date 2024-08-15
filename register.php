@@ -1,7 +1,14 @@
 <?php
 session_start();
+require_once 'check_auth.php';
 include 'db_connection.php';
 require 'vendor/autoload.php';
+
+// Проверка авторизации
+if (is_logged_in()) {
+    header("Location: dashboard.php");
+    exit();
+}
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -126,7 +133,6 @@ $conn->close();
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
  
     <style>
-       
         .register-container {
             max-width: 400px;
             width: 100%;

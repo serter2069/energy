@@ -1,14 +1,22 @@
 <?php
 session_start();
+require_once 'check_auth.php';
 include 'db_connection.php';
-require 'vendor/autoload.php'; // Подключаем автозагрузчик Composer
+require 'vendor/autoload.php';
+
+// Проверка авторизации
+if (is_logged_in()) {
+    header("Location: dashboard.php");
+    exit();
+}
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 $email = '';
-$messageSent = false; // Убедитесь, что начальное значение false
+$messageSent = false;
 $error_message = "";
+$success_message = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
@@ -26,15 +34,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($result_check->num_rows > 0) {
             $user = $result_check->fetch_assoc();
-            if ($user['activation_email_status'] == 'not activated') {
+            if ($user['email_activation_status'] == 'not_activated') {
                 // Генерация нового токена активации
                 $token = bin2hex(random_bytes(16));
-                $sql_update = "UPDATE users SET activation_token = ? WHERE email = ?";
+                $sql_update = "UPDATE users SET token = ? WHERE email = ?";
                 $stmt_update = $conn->prepare($sql_update);
                 $stmt_update->bind_param("ss", $token, $email);
                 if ($stmt_update->execute()) {
                     // Отправка активационного email с использованием PHPMailer
-                    $activation_link = "http://dressit.me/activate.php?activation_token=$token";
+                    $activation_link = "https://energydiary.terekhovsergei.life/activate.php?token=$token";
                     $subject = "Activate Your Account";
                     $message = "Click the following link to activate your account: <a href='$activation_link'>$activation_link</a>";
 
@@ -50,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $mail->Port = $mail_port;
 
                         // Получатели
-                        $mail->setFrom($mail_from, 'Dress it');
+                        $mail->setFrom($mail_from, 'Energy Diary');
                         $mail->addAddress($email);
 
                         // Контент письма
@@ -76,8 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt->bind_param("ss", $token, $email);
 
                 if ($stmt->execute()) {
-                    $server_name = $_SERVER['SERVER_NAME'];
-                    $reset_link = "http://$server_name/reset_password.php?token=$token";
+                    $reset_link = "https://energydiary.terekhovsergei.life/reset_password.php?token=$token";
                     $subject = "Password Reset";
                     $message = "
                         <html>
@@ -85,9 +92,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <title>Password Reset</title>
                         </head>
                         <body>
-                            <p>Click this link to reset your password: <a href='$reset_link' target='_blank'>$reset_link</a></p>
-                            <p>If the link doesn't work, copy and paste the following URL into your browser:</p>
-                            <p>$reset_link</p>
+                            <p>Click this link to reset your password: <a href='$reset_link'>$reset_link</a></p>
+                            <p>If you didn't request a password reset, please ignore this email.</p>
                         </body>
                         </html>";
 
@@ -103,7 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $mail->Port = $mail_port;
 
                         // Получатели
-                        $mail->setFrom($mail_from, 'Dress it');
+                        $mail->setFrom($mail_from, 'Energy Diary');
                         $mail->addAddress($email);
 
                         // Контент письма
@@ -130,9 +136,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         $stmt_check->close();
-        $conn->close();
     }
 }
+
+$conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -188,15 +195,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     </style>
 </head>
-<?php include 'header.php'; ?>
 <body>
-   
+    <?php include 'header.php'; ?>
 
     <div class="forgot-password-wrapper">
         <div class="forgot-password-container">
             <h1 class="text-center">Forgot Password</h1>
 
-            <?php if (!$messageSent): ?> <!-- Изменение условия -->
+            <?php if (!$messageSent): ?>
                 <?php if (!empty($error_message)): ?>
                     <div class="alert alert-danger text-center"><?php echo $error_message; ?></div>
                 <?php endif; ?>
@@ -213,7 +219,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <?php else: ?>
                 <div class="alert alert-success text-center mt-3">
                     <h4 class="alert-heading">Email Sent!</h4>
-                    <p>We've sent a link to your email address.</p>
+                    <p><?php echo $success_message; ?></p>
                     <hr>
                     <p class="mb-0"><a href="login.php" class="btn-link">Back to Login</a></p>
                 </div>
